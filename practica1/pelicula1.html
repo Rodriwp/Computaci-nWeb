@@ -3,13 +3,47 @@
   <head>
     <meta charset="UTF-8">
     <title>La vida Johan Strauss Mastropiero</title>
+    <link rel="stylesheet" href="estilo.css" type="text/css">
   </head>
   <body>
     <a href="practica1.html">
       <img src="premios_mastropiero.jpeg" alt="Logotipo premios Mastropiero">
     </a>
+    <section>
+      <h2>
+          La vida Johan Strauss Mastropiero
+
+      </h2>
+       <p>
+            En esta pelicula se cuenta la vida del gran Maestro Mastropiero.
+            Su desarrollo musical brillo por la falta del mismo.
+       </p>
+    </section>
     <p>
-    Realizar la pagina
+      <div id="comentario">
+      <p>
+        Deje su comentario:
+      </p>
+
+      <form action="comentario.html">
+        <p>
+          <label for="unittype">Seleccione como publicar:</label>
+          <select id="unittype" name="unittype">
+          <option value="1" selected>Usuario</option>
+          <option value="2">Anónimo</option>
+        </select>
+        <label>
+          <input type="text" name="Usuario">
+        </label>
+        </p>
+        <p>
+          <textarea name="mensaje" rows="5" cols="80"
+          placeholder="Escribe su comentario..."></textarea>
+        </p>
+        <p>
+        <input type="submit" value="Comentar">
+        </p>
+      </div>
   </p>
   </body>
 </html>
