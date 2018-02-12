@@ -1,13 +1,51 @@
 body {
     background-color: lightblue;
+    max-width: 800px;
+    margin: auto;
+
 }
 
-h1 {
+#imagencabecera{
+  width: 70%;
+  height: 100px;
+  display:block;
+  margin:auto;
+}
+
+#votarya{
+  color: black;
+  text-shadow: 1000px;
+  font-size: 50px;
+}
+
+#votarya:hover{
+  color: red;
+  text-shadow: 3px 3px 3px;
+
+}
+
+#votacion{
+  margin-top: 20px;
+  border: 5px solid SpringGreen;
+  padding: 20px;
+  margin: 10%;
+}
+
+article p {
+    font-family: verdana;
+    font-size: 14px;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h2 {
     color: white;
     text-align: center;
 }
 
-p {
-    font-family: verdana;
-    font-size: 14px;
+h3 {
+    color: chocolate;
+    text-align: center;
+
 }
