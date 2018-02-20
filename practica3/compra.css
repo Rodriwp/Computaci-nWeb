@@ -1,0 +1,27 @@
+#compra {
+    min-width: 500px;
+}
+
+#compra thead {
+    background-color: black;
+    color: white;
+    font-weight: bold;
+}
+
+#compra td {
+    padding-left: 0.5ex;
+    padding-right: 0.5ex;
+}
+
+#total {
+    font-weight: bold;
+}
+
+#compra td:nth-child(2),
+#compra td:nth-child(3) {
+    text-align: right;
+}
+
+#cantidad {
+    text-align: right;
+}
