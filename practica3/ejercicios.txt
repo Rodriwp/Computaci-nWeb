@@ -1,0 +1,60 @@
+1.2 Consulta sobre una unica tabla
+- En la tabla de países, la fila con los datos del país 10.
+    SELECT * FROM Paises WHERE id=10;
+
+-En la tabla de poblaciones, las filas con los datos de 2016.
+    SELECT * FROM Poblaciones WHERE anyo=2016;
+
+-En la tabla de poblaciones, las filas con los datos de 2010 a 2012, ambos inclusive.
+    SELECT * FROM Poblaciones WHERE anyo BETWEEN 2010 AND 2012;
+
+-En la tabla de poblaciones, las filas con población superior a 50 millones.
+    SELECT * FROM Poblaciones WHERE poblacion>50000000;
+
+-En la tabla de poblaciones, las filas con identificador de país 10 anteriores a 2010.
+    SELECT * FROM Poblaciones WHERE pais=10 AND anyo<=2010;
+
+-En la tabla de poblaciones, las filas de 2007 o 2008 con menos de un millón de población.
+    SELECT * FROM Poblaciones WHERE anyo BETWEEN 2007 AND 2008 AND poblacion<1000000;
+
+-En la tabla de poblaciones, la población del país 10 año a año, de más reciente a más antiguo.
+    SELECT * FROM Poblaciones WHERE pais=10 ORDER BY anyo;
+
+    
+1.3 Consultas agregadas
+
+-La poblacion total de la UE en 2016
+    SELECT SUM(poblacion) FROM Poblaciones WHERE anyo=2016;
+    
+-La poblacion media en los paises de la UE en 2016
+    SELECT AVG(poblacion) FROM Poblaciones WHERE anyo=2016;
+    
+-La población máxima, media y mínima de cada país de la Unión Europea en el período del cual hay datos, con el siguiente formato:
+    SELECT pais,MAX(poblacion), AVG(poblacion), MIN(poblacion) FROM Poblaciones GROUP BY pais;
+    
+-Los identificadores de los idiomas recogidos en la tabla IdiomasPais, filtrando aquellos que sean duplicados, en orden descendente de identificador.
+    SELECT DISTINCT idioma FROM IdiomasPais ORDER BY pais DESC;
+    
+    
+1.4 Consultas
+
+-Un listado con el nombre de cada país y su capital, con el siguiente formato
+    SELECT Paises.nombre,Capitales.nombre FROM Paises INNER JOIN Capitales ON Paises.capital=Capitales.id; 
+
+
+-Repite el apartado anterior, pero nombrando las columnas como "País" y "Capital"
+    SELECT Paises.nombre AS Pais,Capitales.nombre AS Capital FROM Paises INNER JOIN Capitales ON Paises.capital=Capitales.id;
+
+-Los países en que se hable alemán
+    SELECT Paises.nombre  FROM Paises INNER JOIN IdiomasPais ON Paises.id=IdiomasPais.pais INNER JOIN Idiomas ON IdiomasPais.idioma=Idiomas.id WHERE Idiomas.nombre="aleman";
+
+-Los países en que se hable alemán y sus poblaciones en 2016
+    SELECT Paises.nombre,Poblaciones.poblacion  FROM Paises INNER JOIN IdiomasPais ON Paises.id=IdiomasPais.pais INNER JOIN Idiomas ON IdiomasPais.idioma=Idiomas.id INNER JOIN Poblaciones ON Poblaciones.pais=Paises.id  WHERE Idiomas.nombre="aleman" AND Poblaciones.anyo=2016;
+
+
+
+
+
+
+
+
