@@ -1,0 +1,84 @@
+APARTADO 1.1. Inserciones de datos y LEFT JOIN
+1.La base de datos sólo contiene datos de los países de la Unión Europea. Amplíala con los datos de Islandia, Noruega, Suiza y Turquía. Incluye poblaciones y capitales, pero no idiomas. Puedes tomar las poblaciones de Eurostat (toma sólo los datos de 2015 y 2016). Comprueba que los datos se hayan insertado correctamente. 
+
+INSERT INTO Capitales
+VALUES
+(29, 'Reikiavik'),
+(30, 'Oslo'),
+(31, 'Berna'),
+(32, 'Ankara');
+
+
+INSERT  INTO Paises
+VALUES
+(29, 'Islandia', 29),
+(30, 'Noruega', 30),
+(31, 'Suiza', 31),
+(32, 'Turquía', 32);
+
+INSERT INTO Poblaciones
+(pais,anyo,poblacion)
+VALUES
+((SELECT  id
+    FROM  Paises
+    WHERE  nombre= 'Islandia'
+),
+2015,329100),
+((SELECT  id
+    FROM  Paises
+    WHERE  nombre= 'Islandia'
+)
+,2016,332529),
+((SELECT  id
+    FROM  Paises
+    WHERE  nombre= 'Noruega'
+),
+2015,5166493),
+((SELECT  id
+    FROM  Paises
+    WHERE  nombre= 'Noruega'
+)
+,2016,5213985),
+((SELECT  id
+    FROM  Paises
+    WHERE  nombre= 'Suiza'
+),
+2015,8237666),
+((SELECT  id
+    FROM  Paises
+    WHERE  nombre= 'Suiza'
+)
+,2016,8327126),
+((SELECT  id
+    FROM  Paises
+    WHERE  nombre= 'Turquia'
+),
+2015,77695904),
+((SELECT  id
+    FROM  Paises
+    WHERE  nombre= 'Turquia'
+)
+,2016,78741053);
+
+
+2.Realiza una consulta que devuelva filas país-idioma. Para los países con varios idiomas deben aparecer varias filas. Para los países nuevos, cuyo idioma no consta en la base de datos, debe aparecer una fila con el país y un NULL en la posición del idioma.
+
+SELECT Paises.nombre AS Pais, Idiomas.nombre AS Idioma FROM Paises LEFT JOIN IdiomasPais ON Paises.id=IdiomasPais.pais LEFT JOIN Idiomas ON IdiomasPais.idioma=Idiomas.id;
+
+APARTADO 1.2. Consultas con self join
+
+1. Los países en que haya caído la población de un año al siguiente, y los años en que haya ocurrido. Vuelca la salida en el formato siguiente
+
+SELECT A.pais, A.anyo,A.poblacion, B.anyo, B.poblacion FROM Poblaciones AS A INNER JOIN Poblaciones AS B  ON A.pais=B.pais WHERE (A.anyo = (B.anyo-1)) AND (A.poblacion > B.poblacion);
+
+2. Lo mismo que en el apartado anterior, pero con el nombre de cada país en vez de su identificador: 
+
+SELECT Paises.nombre, A.anyo,A.poblacion, B.anyo, B.poblacion FROM Poblaciones AS A INNER JOIN Poblaciones AS B  ON A.pais=B.pais INNER JOIN Paises ON A.pais= Paises.id WHERE (A.anyo = (B.anyo-1)) AND (A.poblacion > B.poblacion);
+
+3.Lo mismo que en los apartados anteriores, pero en este caso mostrando las ocurrencias de subidas de más de un 1% en población de un año al siguiente:
+
+SELECT Paises.nombre, A.anyo,A.poblacion, B.anyo, B.poblacion FROM Poblaciones AS A INNER JOIN Poblaciones AS B  ON A.pais=B.pais INNER JOIN Paises ON A.pais= Paises.id WHERE (A.anyo = (B.anyo-1)) AND ((A.poblacion + A.poblacion*0.01) < B.poblacion);
+
+APARTADO 2. Creación de tablas 
+
+
