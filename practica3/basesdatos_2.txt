@@ -1,5 +1,5 @@
 APARTADO 1.1. Inserciones de datos y LEFT JOIN
-1.La base de datos sólo contiene datos de los países de la Unión Europea. Amplíala con los datos de Islandia, Noruega, Suiza y Turquía. Incluye poblaciones y capitales, pero no idiomas. Puedes tomar las poblaciones de Eurostat (toma sólo los datos de 2015 y 2016). Comprueba que los datos se hayan insertado correctamente. 
+1.La base de datos sólo contiene datos de los países de la Unión Europea. Amplíala con los datos de Islandia, Noruega, Suiza y Turquía. Incluye poblaciones y capitales, pero no idiomas. Puedes tomar las poblaciones de Eurostat (toma sólo los datos de 2015 y 2016). Comprueba que los datos se hayan insertado correctamente.
 
 INSERT INTO Capitales
 VALUES
@@ -71,7 +71,7 @@ APARTADO 1.2. Consultas con self join
 
 SELECT A.pais, A.anyo,A.poblacion, B.anyo, B.poblacion FROM Poblaciones AS A INNER JOIN Poblaciones AS B  ON A.pais=B.pais WHERE (A.anyo = (B.anyo-1)) AND (A.poblacion > B.poblacion);
 
-2. Lo mismo que en el apartado anterior, pero con el nombre de cada país en vez de su identificador: 
+2. Lo mismo que en el apartado anterior, pero con el nombre de cada país en vez de su identificador:
 
 SELECT Paises.nombre, A.anyo,A.poblacion, B.anyo, B.poblacion FROM Poblaciones AS A INNER JOIN Poblaciones AS B  ON A.pais=B.pais INNER JOIN Paises ON A.pais= Paises.id WHERE (A.anyo = (B.anyo-1)) AND (A.poblacion > B.poblacion);
 
@@ -79,6 +79,65 @@ SELECT Paises.nombre, A.anyo,A.poblacion, B.anyo, B.poblacion FROM Poblaciones A
 
 SELECT Paises.nombre, A.anyo,A.poblacion, B.anyo, B.poblacion FROM Poblaciones AS A INNER JOIN Poblaciones AS B  ON A.pais=B.pais INNER JOIN Paises ON A.pais= Paises.id WHERE (A.anyo = (B.anyo-1)) AND ((A.poblacion + A.poblacion*0.01) < B.poblacion);
 
-APARTADO 2. Creación de tablas 
+APARTADO 2. Creación de tablas
 
+#Tabla de autores
 
+CREATE  TABLE Autores (
+  id INT  NOT  NULL  auto_increment ,
+  nombre  VARCHAR (255)  NOT NULL ,
+  PRIMARY KEY(id)
+)ENGINE=INNODB;
+
+#Tabla editoriales
+
+CREATE  TABLE Editoriales (
+  id INT  NOT  NULL  auto_increment ,
+  nombre  VARCHAR (255)  NOT NULL ,
+  PRIMARY KEY(id)
+)ENGINE=INNODB;
+#tabla libros
+
+CREATE TABLE Libros (
+ id INT NOT NULL auto_increment,
+ isbn  BIGINT NOT NULL,
+ titulo VARCHAR (255)NOT NULL,
+ editorial INT NOT NULL,
+ ano YEAR(4) NOT NULL,
+ precio DECIMAL NOT NULL,
+ PRIMARY KEY(id),
+ CONSTRAINT  FOREIGN  KEY (editorial)
+ REFERENCES  Editoriales(id)
+)ENGINE=INNODB;
+#tabla AutoresLibro
+CREATE TABLE AutoresLibro (
+  id INT NOT NULL auto_increment,
+  libro INT NOT NULL,
+  autor INT NOT NULL,
+  PRIMARY KEY(id),
+  CONSTRAINT  FOREIGN  KEY (libro)
+  REFERENCES  Libros(id),
+  CONSTRAINT  FOREIGN  KEY (autor)
+  REFERENCES  Autores(id)
+)ENGINE=INNODB;
+
+#tabla Stock
+CREATE TABLE Stock (
+  id INT NOT NULL auto_increment,
+  libro INT NOT NULL,
+  cantidad INT NOT NULL,
+  PRIMARY KEY(id),
+  CONSTRAINT  FOREIGN  KEY (libro)
+  REFERENCES  Libros(id)
+)ENGINE=INNODB;
+
+#tabla ventas
+CREATE TABLE Ventas (
+  id INT NOT NULL auto_increment,
+  date DATETIME NOT NULL,
+  libro INT NOT NULL,
+  cantidad INT NOT NULL,
+  PRIMARY KEY(id),
+  CONSTRAINT  FOREIGN  KEY (libro)
+  REFERENCES  Libros(id)
+)ENGINE=INNODB;
