@@ -1,0 +1,2 @@
+javac -cp ../clases/ -d ../classes bookshop/*.java
+java -cp ../classes/:../lib/TODO.jar bookshop.BookShop
