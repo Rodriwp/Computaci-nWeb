@@ -20,7 +20,7 @@ public class DBManager implements AutoCloseable {
 
     private void connect() throws SQLException {
         // TODO: program this method
-        String  url = "jdbc:mysql://mysql.lab.it.uc3m.es/18_comweb_14b";
+        String  url = "jdbc:mysql://localhost:8080/18_comweb_14b";
         connection = DriverManager.getConnection(url , "18_comweb_14", "Rw1e1Rpn");
     }
 
@@ -56,7 +56,21 @@ public class DBManager implements AutoCloseable {
      */
     public int getStock(int bookId) throws SQLException {
         // TODO: program this method
-        return 0;
+        ResultSet rs;
+        String  query = "SELECT * FROM Stock WHERE libro=?";
+        try (PreparedStatement  st = connection.prepareStatement(query)) {
+
+            st.setInt(1, bookId);
+            rs = st.executeQuery();
+
+            if(rs == null) return 0;
+            if(!rs.next()) {
+                return 0;
+            }else{
+
+                return rs.getInt("cantidad");
+            }
+        }
     }
 
     /**
@@ -69,14 +83,26 @@ public class DBManager implements AutoCloseable {
     public Book searchBook(String isbn) throws SQLException {
         // TODO: program this method
         ResultSet rs;
-        String  query = "SELECT * FROM Libro WHERE isbn=?";
+        String  query = "SELECT * FROM Libros WHERE isbn=?";
         try (PreparedStatement  st = connection.prepareStatement(query)) {
 
             st.setInt(1, Integer.parseInt(isbn));
             rs = st.executeQuery();
+
+            if(rs == null) return null;
+            if(!rs.next()) {
+                return null;
+            }else{
+                Book book = new Book();
+
+                book.setTitle(rs.getString("titulo"));
+                book.setIsbn(rs.getString("isbn"));
+                book.setYear(rs.getInt("ano"));
+                book.setId(rs.getInt("id"));
+
+                return book;
+            }
         }
-        if( rs == null) return null;
-        return new Book();
     }
 
     /**
@@ -103,7 +129,41 @@ public class DBManager implements AutoCloseable {
      */
     public boolean sellBook(int book, int units) throws SQLException {
         // TODO: program this method
-        return false;
+        boolean  success = false;
+        connection.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+        connection.setAutoCommit(false);
+        String query = "SELECT * FROM Stock WHERE libro=? AND cantidad >= ?";
+        try (PreparedStatement st = connection.prepareStatement(query)) {
+            st.setInt(1, book);
+            st.setInt(2, units);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()){
+                String query2 = "UPDATE Stock SET cantidad=cantidad-? WHERE libro=?";
+                try (PreparedStatement  st2 = connection.prepareStatement(query2)) {
+                    st2.setInt(1, units);
+                    st2.setInt(2, book);
+                    st2.executeUpdate();
+                }
+                String query3 = "INSERT INTO Ventas (date,libro,cantidad) VALUES (NOW(),?,?)";
+                try (PreparedStatement  st3 = connection.prepareStatement(query2)) {
+                    st3.setInt(1, book);
+                    st3.setInt(2, units);
+                    st3.executeUpdate();
+                }
+                success = true;
+
+            }else{
+                success = false;
+            }
+        } finally {
+            if (success) {
+                connection.commit ();
+            } else {
+                connection.rollback ();
+            }
+            connection.setAutoCommit(true);
+        }
+        return success;
     }
 
     /**
@@ -114,6 +174,23 @@ public class DBManager implements AutoCloseable {
      */
     public List<Book> listBooks() throws SQLException {
         // TODO: program this method
-        return new ArrayList<Book>();
+        ResultSet rs;
+        ArrayList<Book> booklist = new ArrayList<Book>();
+        String  query = "SELECT * FROM Libros";
+        try (PreparedStatement  st = connection.prepareStatement(query)) {
+            rs = st.executeQuery();
+
+            if(rs == null) return null;
+            while(rs.next()){
+                Book book = new Book();
+                book.setTitle(rs.getString("titulo"));
+                book.setIsbn(rs.getString("isbn"));
+                book.setYear(rs.getInt("ano"));
+                book.setId(rs.getInt("id"));
+
+                booklist.add(book);
+            }
+        }
+        return booklist ;
     }
 }
