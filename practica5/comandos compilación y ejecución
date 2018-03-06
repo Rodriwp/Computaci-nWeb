@@ -1,2 +1,2 @@
-javac -cp ../clases/ -d ../classes bookshop/*.java
-java -cp ../classes/:../lib/TODO.jar bookshop.BookShop
+javac -cp ../class/ -d ../class bookshop/*.java
+java -cp ../class/:../lib/mysql-connector-java-5.1.44-bin.jar bookshop.BookShop

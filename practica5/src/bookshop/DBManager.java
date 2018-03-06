@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.PreparedStatement;
 
 
 public class DBManager implements AutoCloseable {
@@ -19,6 +20,8 @@ public class DBManager implements AutoCloseable {
 
     private void connect() throws SQLException {
         // TODO: program this method
+        String  url = "jdbc:mysql://mysql.lab.it.uc3m.es/18_comweb_14b";
+        connection = DriverManager.getConnection(url , "18_comweb_14", "Rw1e1Rpn");
     }
 
     /**
@@ -65,7 +68,15 @@ public class DBManager implements AutoCloseable {
      */
     public Book searchBook(String isbn) throws SQLException {
         // TODO: program this method
-        return null;
+        ResultSet rs;
+        String  query = "SELECT * FROM Libro WHERE isbn=?";
+        try (PreparedStatement  st = connection.prepareStatement(query)) {
+
+            st.setInt(1, Integer.parseInt(isbn));
+            rs = st.executeQuery();
+        }
+        if( rs == null) return null;
+        return new Book();
     }
 
     /**
